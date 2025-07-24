@@ -108,7 +108,7 @@
     <el-dialog
       v-model="showBatchImport"
       title="批量导入成绩"
-      width="1200px"
+      width="clamp(320px, 90vw, 1200px)"
       :close-on-click-modal="true"
       :destroy-on-close="true"
       :before-close="handleBatchImportClose"
@@ -136,7 +136,7 @@
     <el-dialog
       v-model="showGradeList"
       title="成绩记录管理"
-      width="1400px"
+      width="clamp(320px, 90vw, 1400px)"
       :close-on-click-modal="true"
       :destroy-on-close="true"
       :before-close="handleGradeListClose"
@@ -163,7 +163,7 @@
     <el-dialog
       v-model="showGradeStats"
       title="成绩统计分析"
-      width="1600px"
+      width="clamp(320px, 90vw, 1600px)"
       :close-on-click-modal="true"
       :destroy-on-close="true"
       :before-close="handleGradeStatsClose"

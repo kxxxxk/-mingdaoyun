@@ -263,7 +263,7 @@
     <el-dialog
       v-model="historyDialogVisible"
       title="排名历史记录"
-      width="80%"
+      width="clamp(320px, 90vw, 1200px)"
       :before-close="handleHistoryDialogClose"
     >
       <div class="history-content">

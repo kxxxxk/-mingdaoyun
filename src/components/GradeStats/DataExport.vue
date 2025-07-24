@@ -111,7 +111,7 @@
     <el-dialog 
       v-model="showExportDialog" 
       title="导出数据" 
-      width="800px"
+      width="clamp(320px, 90vw, 800px)"
       :close-on-click-modal="false"
     >
       <el-form :model="exportForm" label-width="120px">
@@ -194,7 +194,7 @@
     <el-dialog 
       v-model="showTemplateDialog" 
       title="编辑报表模板" 
-      width="900px"
+      width="clamp(320px, 90vw, 900px)"
       :close-on-click-modal="false"
     >
       <el-form :model="templateForm" label-width="120px">

@@ -240,7 +240,7 @@
     <el-dialog
       v-model="editDialog.visible"
       title="编辑成绩记录"
-      width="600px"
+      width="clamp(320px, 90vw, 600px)"
       :close-on-click-modal="false"
     >
       <GradeEditForm
@@ -251,13 +251,17 @@
         @success="handleEditSuccess"
         @cancel="editDialog.visible = false"
       />
+      <template #footer>
+        <el-button @click="editDialog.visible = false">取消</el-button>
+        <el-button type="primary" @click="closeDialog">关闭</el-button>
+      </template>
     </el-dialog>
 
     <!-- 删除确认对话框 -->
     <el-dialog
       v-model="deleteDialog.visible"
       title="确认删除"
-      width="400px"
+      width="clamp(320px, 90vw, 500px)"
     >
       <p>确定要删除以下成绩记录吗？</p>
       <ul>
@@ -393,7 +397,6 @@ const loadGradeData = async () => {
 
   try {
     loading.value = true;
-    
     // 构建查询参数
     const params = buildQueryParams({
       worksheetId: props.gradeWorksheetId,
@@ -401,26 +404,30 @@ const loadGradeData = async () => {
       pageSize: pagination.pageSize,
       ...buildSearchParams()
     });
-
     const result = await getWorksheetData(params);
-    
-    if (result.success) {
-      tableData.value = result.data;
-      pagination.total = result.total;
-      
-      // 计算统计信息
-      calculateStatistics(result.data);
-      
-      emit('refresh');
+    // 自动修正数据结构，确保 tableData.value 一定为数组
+    let records = [];
+    if (Array.isArray(result.data)) {
+      records = result.data;
+    } else if (result.data && Array.isArray(result.data.list)) {
+      records = result.data.list;
     } else {
+      records = [];
+    }
+    tableData.value = records;
+    pagination.total = result.total || (result.data && result.data.total) || records.length;
+    // 计算统计信息
+    calculateStatistics(records);
+    emit('refresh');
+  } catch (error) {
+    if (result && result.error) {
       ElMessage.error('获取数据失败: ' + result.error);
       emit('error', result.error);
+    } else {
+      console.error('加载成绩数据失败:', error);
+      ElMessage.error('加载数据失败: ' + error.message);
+      emit('error', error.message);
     }
-    
-  } catch (error) {
-    console.error('加载成绩数据失败:', error);
-    ElMessage.error('加载数据失败: ' + error.message);
-    emit('error', error.message);
   } finally {
     loading.value = false;
   }
@@ -501,16 +508,14 @@ const getSortFieldId = (field) => {
 
 // 计算统计信息
 const calculateStatistics = (data) => {
-  if (!data || data.length === 0) {
+  if (!Array.isArray(data) || data.length === 0) {
     statistics.total = 0;
     statistics.average = 0;
     statistics.highest = 0;
     statistics.lowest = 0;
     return;
   }
-  
   const scores = data.map(item => parseFloat(item.score)).filter(score => !isNaN(score));
-  
   statistics.total = data.length;
   statistics.average = scores.length > 0 ? scores.reduce((sum, score) => sum + score, 0) / scores.length : 0;
   statistics.highest = Math.max(...scores);
@@ -724,6 +729,11 @@ const getScoreTagType = (score) => {
   if (num >= 80) return 'warning';
   if (num >= 60) return 'info';
   return 'danger';
+};
+
+// 关闭弹窗方法
+const closeDialog = () => {
+  emit('close');
 };
 
 // 监听搜索表单变化

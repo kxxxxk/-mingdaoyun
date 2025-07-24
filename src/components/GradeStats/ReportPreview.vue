@@ -169,7 +169,7 @@
     <el-dialog 
       v-model="showPreviewSettings" 
       title="预览设置" 
-      width="600px"
+      width="clamp(320px, 90vw, 600px)"
     >
       <el-form :model="previewSettings" label-width="120px">
         <el-form-item label="预览模式">

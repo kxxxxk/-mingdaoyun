@@ -165,7 +165,7 @@
     <el-dialog
       v-model="detailDialogVisible"
       :title="`${selectedStudent.studentName} - 详细成绩`"
-      width="80%"
+      width="clamp(320px, 90vw, 1200px)"
     >
       <StudentDetailStats :student-data="selectedStudent" />
     </el-dialog>

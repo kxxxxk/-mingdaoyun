@@ -108,7 +108,7 @@
     <el-dialog
       v-model="detailDialogVisible"
       :title="`${selectedClass.className} - 详细统计`"
-      width="80%"
+      width="clamp(320px, 90vw, 1200px)"
     >
       <ClassDetailStats :class-data="selectedClass" />
     </el-dialog>

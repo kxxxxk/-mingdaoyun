@@ -153,7 +153,7 @@
     <el-dialog
       v-model="detailDialogVisible"
       :title="`${selectedCourse.courseName} - 详细统计`"
-      width="80%"
+      width="clamp(320px, 90vw, 1200px)"
     >
       <CourseDetailStats :course-data="selectedCourse" />
     </el-dialog>
